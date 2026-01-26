@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NERIST Library Recommendation System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 60px;
+    height: 100vh;
+    background: #2c3e50;
+    color: white;
+    position: fixed;
+    transition: width 0.3s;
+    overflow: hidden;
+}
+
+.sidebar.open { width: 240px; }
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.sidebar li:hover { background: #34495e; }
+
+.sidebar i { margin-right: 10px; }
+
+/* Main */
+.main {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.main.shift { margin-left: 240px; }
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-area {
+    display: flex;
+    gap: 10px;
+}
+
+.search-area input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-area button {
+    padding: 8px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Table */
+table {
+    width: 100%;
+    margin-top: 20px;
+    background: white;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+th { background: #ecf0f1; }
+
+/* Recommend */
+.recommend-box {
+    display: none;
+    background: #f9f9f9;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+.recommended .book {
+    background: #eaf2ff;
+    padding: 6px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ---------- LIBRARY MODEL ---------- */
+.library {
+    display: none;
+}
+
+.floor {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.room {
+    margin-top: 10px;
+    padding: 10px;
+    border: 2px solid #3498db;
+}
+
+.shelf {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.row {
+    padding: 8px;
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.highlight {
+    background: #2ecc71;
+    color: white;
+    font-weight: bold;
+}
+
+
+.profile-box {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.profile-icon {
+  font-size: 55px;
+  color: #ecf0f1;
+  margin-bottom: 8px;
+}
+
+.profile-info p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #f1f5f9;
+}
+
+.teacher-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.submenu {
+  padding-left: 20px;
+}
+
+.submenu li {
+  cursor: pointer;
+  padding: 6px;
+  color: #cbd5e1;
+}
+
+.submenu li:hover {
+  color: white;
+}
+
+.syllabus-box {
+  padding: 10px;
+  background: #111827;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+<ul>
+    <li onclick="toggleSidebar()"><i class="fas fa-bars"></i> </li>
+    <div class="profile-box">
+  <i class="fas fa-user-circle profile-icon"></i>
+
+  <div class="profile-info">
+    <p class="teacher-name">Teacher Name</p>
+    <p class="teacher-id">ID: </p>
+  </div>
+</div>
+    <li onclick="showDashboard()"><i class="fas fa-table"></i> Dashboard</li>
+    <ul class="menu">
+
+  <!-- SYLLABUS -->
+  <li onclick="toggleSyllabus()" class="menu-item">
+    <i class="fa-solid fa-book"></i> Syllabus
+  </li>
+
+  <!-- COURSE LIST -->
+  <ul id="courseList" class="submenu hidden">
+    <li onclick="showSyllabus('ds')">Data Structures</li>
+    <li onclick="showSyllabus('python')">Python</li>
+  </ul>
+
+  <!-- SYLLABUS CONTENT -->
+  <div id="syllabusSection" class="syllabus-box hidden">
+    <h4 id="subjectTitle"></h4>
+    <ul id="syllabusContent"></ul>
+  </div>
+
+</ul>
+    <label>
+      <button  onclick="openLibraryFromTeacher()"></button><i class="fas fa-library"></i> Library
+    </label>
+
+    <li onclick="logout()" class="logout-item"><i class="fas fa-sign-out-alt"></i> Logout</li>
+</ul>
+</div>
+
+<!-- Main -->
+<div class="main" id="main">
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+    <div class="top-bar">
+        <div class="search-area">
+        <input id="searchBook" placeholder="Search Book">
+        <input id="searchAuthor" placeholder="Search Author">
+        <button onclick="searchBook()">Search</button>
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Batch</th>
+            <th>Recommend Books</th>
+        </tr>
+
+        <tr>
+            <td>CS101</td>
+            <td>Data Structures</td>
+            <td>2023</td>
+            <td>
+                <button onclick="toggleRecommend(this)">Recommend Book</button>
+                <div class="recommend-box">
+                    <input placeholder="Book Name">
+                    <input placeholder="Author">
+                    <button onclick="saveBook(this)">Save</button>
+                </div>
+                <div class="recommended"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- LIBRARY MODEL -->
+<div class="library" id="library">
+
+<h2>📚 NERIST Library – 2D Model</h2>
+
+<div class="floor">
+    <h3>1st Floor</h3>
+    <div class="room">
+        <b>General Reading Room</b>
+        <div class="shelf">
+            <div class="row">Shelf A - Row 1</div>
+            <div class="row">Shelf A - Row 2</div>
+        </div>
+    </div>
+</div>
+
+<div class="floor">
+    <h3>2nd Floor</h3>
+
+    <div class="room">
+        <b>Degree Room</b>
+        <div class="shelf">
+            <div class="row highlight">
+                Shelf B - Row 3<br>
+                📘 Data Structures
+            </div>
+            <div class="row">Shelf B - Row 4</div>
+        </div>
+    </div>
+
+    <div class="room">
+        <b>Diploma Room</b>
+        <div class="shelf">
+            <div class="row">Shelf C - Row 1</div>
+            <div class="row">Shelf C - Row 2</div>
+        </div>
+    </div>
+</div>
+
+<p>
+<b>Book Location:</b><br>
+2nd Floor → Degree Room → Shelf B → Row 3
+</p>
+
+</div>
+
+</div>
+
+<script>
+function toggleSidebar() {
+    sidebar.classList.toggle("open");
+    main.classList.toggle("shift");
+}
+
+function toggleRecommend(btn) {
+    btn.nextElementSibling.style.display = "block";
+}
+
+function saveBook(btn) {
+    const box = btn.parentElement;
+    const name = box.children[0].value;
+    const author = box.children[1].value;
+
+    const div = document.createElement("div");
+    div.className = "book";
+    div.innerHTML = `${name} - ${author}
+        <button onclick="this.parentElement.remove()">X</button>`;
+
+    box.nextElementSibling.prepend(div);
+    box.style.display = "none";
+
+
+
+    // get existing books or empty array
+  let books = JSON.parse(localStorage.getItem("recommendedBooks")) || [];
+
+  // new book object
+  const newBook = {
+    courseCode: "CS101",
+    courseName: "Data Structures",
+    batch: "2023",
+    bookName: bookName,
+    author: author
+  };
+
+  books.push(newBook);
+
+  // save back to localStorage
+  localStorage.setItem("recommendedBooks", JSON.stringify(books));
+
+  alert("Book Recommended Successfully!");
+
+  // clear inputs
+  document.getElementById("bookName").value = "";
+  document.getElementById("author").value = "";
+
+}
+
+function showLibrary() {
+    dashboard.style.display = "none";
+    library.style.display = "block";
+}
+
+function showDashboard() {
+    library.style.display = "none";
+    dashboard.style.display = "block";
+}
+</script>
+<script>
+const sidebar = document.getElementById("sidebar");
+const main = document.getElementById("main");
+const dashboard = document.getElementById("dashboard");
+const library = document.getElementById("library");
+
+/* DEMO BOOK DATABASE */
+const bookDatabase = [
+    {
+        title: "Data Structures",
+        author: "Seymour Lipschutz",
+        edition: "2nd Edition",
+        year: "2018",
+        department: "Computer Science",
+        status: "Available",
+        description: "This book provides a clear and concise introduction to data structures.",
+        cover: "https://via.placeholder.com/200x280?text=Data+Structures",
+        location: {
+            floor: "2nd Floor",
+            room: "Degree Room",
+            shelf: "B",
+            row: "3"
+        }
+    }
+];
+
+function searchBook() {
+    const book = document.getElementById("searchBook").value.toLowerCase();
+    const author = document.getElementById("searchAuthor").value.toLowerCase();
+
+    const result = bookDatabase.find(b =>
+        b.title.toLowerCase().includes(book) &&
+        b.author.toLowerCase().includes(author)
+    );
+
+    if (!result) {
+        alert("Book not found");
+        return;
+    }
+
+    /* SAVE RESULT & REDIRECT */
+    localStorage.setItem("recommendedBooks", JSON.stringify(result));
+    window.location.href = "books.html";
+}
+
+
+
+function logout(){
+    window.location.href="login.html";
+}
+</script>
+
+
+<script>
+  function toggleSyllabus() {
+    document.getElementById("courseList").classList.toggle("hidden");
+    document.getElementById("syllabusSection").classList.add("hidden");
+  }
+
+  function showSyllabus(course) {
+    const title = document.getElementById("subjectTitle");
+    const content = document.getElementById("syllabusContent");
+
+    let syllabusData = {
+      ds: {
+        name: "Data Structures",
+        topics: [
+          "Arrays",
+          "Linked List",
+          "Stack & Queue",
+          "Trees",
+          "Graphs"
+        ]
+      },
+      python: {
+        name: "Python",
+        topics: [
+          "Introduction",
+          "Basic"
+        ]
+      }
+    };
+
+    title.innerText = syllabusData[course].name;
+    content.innerHTML = "";
+
+    syllabusData[course].topics.forEach(topic => {
+      let li = document.createElement("li");
+      li.innerText = topic;
+      content.appendChild(li);
+    });
+
+    document.getElementById("syllabusSection").classList.remove("hidden");
+  }
+</script>
+
+<script>
+function recommendBook(courseCode, bookName, author) {
+  let allBooks = JSON.parse(localStorage.getItem("recommendedBooks")) || {};
+
+  // if course not present, create empty array
+  if (!allBooks[courseCode]) {
+    allBooks[courseCode] = [];
+  }
+
+  allBooks[courseCode].push({
+    bookName: bookName,
+    author: author
+  });
+
+  localStorage.setItem("recommendedBooks", JSON.stringify(allBooks));
+
+  window.onload = () => {
+  let data = JSON.parse(localStorage.getItem("recommendedBooks")) || {};
+  if (!data[COURSE_CODE]) return;
+
+  data[COURSE_CODE].forEach(b => {
+    addBookToUI(b.bookName, b.author);
+  });
+}
+}
+</script>
+
+
+<script>
+const COURSE_CODE = "CS101";
+
+/* SAVE BOOK */
+function saveBook(btn) {
+  const box = btn.parentElement;
+  const bookName = box.children[0].value.trim();
+  const author = box.children[1].value.trim();
+
+  if (!bookName || !author) {
+    alert("Enter book name and author");
+    return;
+  }
+
+  let data = JSON.parse(localStorage.getItem("recommendedBooks")) || {};
+  if (!data[COURSE_CODE]) data[COURSE_CODE] = [];
+
+  data[COURSE_CODE].push({ bookName, author });
+  localStorage.setItem("recommendedBooks", JSON.stringify(data));
+
+  addBookToUI(bookName, author);
+
+  box.children[0].value = "";
+  box.children[1].value = "";
+}
+
+/* UI UPDATE */
+function addBookToUI(book, author) {
+  const list = document.querySelector(".recommended");
+  const div = document.createElement("div");
+  div.className = "book";
+  /*div.textContent = `${book} - ${author}`;*/
+  div.innerHTML = `${book} - ${author}
+<button onclick="deleteBook('${book}', '${author}')">X</button>`;
+  list.appendChild(div);
+}
+
+/* RESTORE ON REFRESH */
+window.onload = () => {
+  let data = JSON.parse(localStorage.getItem("recommendedBooks")) || {};
+  if (!data[COURSE_CODE]) return;
+
+  data[COURSE_CODE].forEach(b => {
+    addBookToUI(b.bookName, b.author);
+  });
+};
+
+function deleteBook(bookName, author) {
+  let data = JSON.parse(localStorage.getItem("recommendedBooks")) || {};
+  let books = data["CS101"] || [];
+
+  // remove from array
+  data["CS101"] = books.filter(
+    b => !(b.bookName === bookName && b.author === author)
+  );
+
+  // save back
+  localStorage.setItem("recommendedBooks", JSON.stringify(data));
+
+  // refresh UI
+  location.reload();
+}
+</script>
+<script>
+function openLibraryFromTeacher() {
+    localStorage.setItem("librarySource", "teacher");
+    window.location.href = "index.html";
+}
+</script>
+
+
+</body>
+</html>

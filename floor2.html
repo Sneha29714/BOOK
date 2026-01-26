@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Second Floor</title>
+
+<style>
+
+body{
+    background-color: rgb(148, 63, 63);    
+    }
+.back-btn{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+.room{
+    height: 100vh;
+    background-color: rgb(148, 63, 63);
+    display: flex;
+    justify-content: center;
+}
+
+/* COUNTER */
+.counter{
+    position: relative;
+    height: 100vh;
+    width: 500px;
+    background-color: black;
+    opacity: 0.6;
+    display: flex;
+    flex-direction: column;
+    border-top:5px solid beige;
+    border-left: 5px solid beige;
+    border-bottom: 5px solid beige;
+}
+
+/* RIGHT WALL */
+.wall{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background-color: beige;
+}
+
+/* DOOR CUTS */
+.door{
+    position: absolute;
+    right: 0;
+    width: 5px;
+    background-color: black;
+}
+
+/* top door */
+.door.top{
+    top: 50px;
+    height: 50px;
+}
+
+/* bottom door */
+.door.bottom{
+    bottom: 60px;
+    height: 50px;
+}
+
+/* CONTENT */
+.countertable{
+    height: 30px;
+    width: 500px;
+    background-color: beige;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    text-align: center;
+    cursor: pointer;
+    border-top: 5px solid black;
+    opacity: 0.8;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.shelfB{
+    height: 30px;
+    width: 400px;
+    background-color: beige;
+    opacity: 0.8;
+    margin: 0 50px 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px 5px 5px 5px;
+}
+
+/* BOOK ROOM */
+.bookroom{
+    height: 100vh;
+    width: 500px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border-top:5px solid beige ;
+    border-right: 5px solid beige;
+    border-bottom : 5px solid beige;
+    background-color: black;
+    opacity: 0.6;
+}
+
+.shelfA{
+    height: 30px;
+    width: 400px;
+    background-color: beige;
+    margin: 0 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px 5px 5px 5px;
+    opacity: 0.8;
+}
+
+#shelfJ{
+    margin-top: 120px;
+}
+/* PATH */
+#path {
+  position: absolute;
+  left: 52%;
+  top: 20%;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  background: #2ecc71;
+  border-radius: 50%;
+  margin: 25px 0;
+  opacity: 0;
+}
+
+/* animation */
+.dot.show {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+</style>
+</head>
+
+<body>
+<a href="#" class="back-btn" onclick="goBack()">⬅</a>
+
+ <!-- PATH DOTS -->
+<div id="path">
+  <div class="dot d1"></div>
+  <div class="dot d2"></div>
+  <div class="dot d3"></div>
+  <div class="dot d4"></div>
+</div>
+
+<div class="room">
+
+    <div class="counter">
+        <!-- wall -->
+        <div class="wall"></div>
+
+        <!-- door gaps -->
+        <div class="door top"></div>
+        <div class="door bottom"></div>
+        
+        
+        <hr><div class="countertable">COUNTER</div>
+        <div class="shelfB" onclick="alert('Shelf J clicked')"> J</div>
+        <div class="shelfB" onclick="alert('Shelf K clicked')"> K</div>
+        <div class="shelfB" onclick="alert('Shelf L clicked')"> L</div>
+        <div class="shelfB" onclick="alert('Shelf M clicked')"> M</div>
+        <div class="shelfB" onclick="alert('Shelf N clicked')"> N</div>
+        <div class="shelfB" onclick="alert('Shelf O clicked')"> O</div>
+        <div class="shelfB" onclick="alert('Shelf P clicked')"> P</div>
+        <div class="shelfB" onclick="alert('Shelf Q clicked')"> Q</div>
+    </div>
+
+    <div class="bookroom">
+        <div class="shelfA" id="shelfJ" onclick="alert('Shelf A clicked')"> A</div>
+        <div class="shelfA" onclick="alert('Shelf B clicked')"> B</div>
+        <div class="shelfA" onclick="alert('Shelf C clicked')"> C</div>
+        <div class="shelfA" onclick="alert('Shelf D clicked')"> D</div>
+        <div class="shelfA" onclick="alert('Shelf E clicked')"> E</div>
+        <div class="shelfA" onclick="alert('Shelf F clicked')"> F</div>
+        <div class="shelfA" onclick="alert('Shelf F clicked')"> G</div>
+        <div class="shelfA" onclick="alert('Shelf G clicked')"> H</div>
+        <div class="shelfA" onclick="alert('Shelf H clicked')"> I</div>
+    </div>
+
+</div>
+<script>
+    window.onload = function() {
+    const bookLocation = JSON.parse(localStorage.getItem("bookLocation"));
+
+    if (!bookLocation) return;
+
+    // Animate the book shelf
+    const shelfMap = {
+        "A": 0,
+        "B": 1,
+        "C": 2,
+        "D": 3,
+        "E": 4,
+        "F": 5,
+        "G": 6,
+        "H": 7,
+        "I": 8,
+        "J": 0, // counter room
+        "K": 1,
+        "L": 2,
+        "M": 3,
+        "N": 4,
+        "O": 5,
+        "P": 6,
+        "Q": 7
+    };
+
+    // Determine which shelf div to highlight
+    let shelfDiv;
+    if (bookLocation.room === "Book Room") {
+        shelfDiv = document.querySelectorAll(".shelfA")[shelfMap[bookLocation.shelf]];
+    } else if (bookLocation.room === "Counter Room") {
+        shelfDiv = document.querySelectorAll(".shelfB")[shelfMap[bookLocation.shelf]];
+    }
+
+    if (shelfDiv) {
+        shelfDiv.style.transition = "all 1s";
+        shelfDiv.style.backgroundColor = "#2ecc71"; // highlight
+        shelfDiv.style.color = "white";
+
+        // Optional: add a blinking animation
+        shelfDiv.style.animation = "blink 1s infinite";
+    }
+};
+
+// Add blinking animation
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+`;
+document.head.appendChild(style);
+
+</script>
+<script>
+window.onload = function () {
+  const location = JSON.parse(localStorage.getItem("bookLocation"));
+
+  // Only animate if book is on 2nd floor & shelf B
+  if (!location || location.floor !== "2nd Floor") return;
+
+  const dots = document.querySelectorAll(".dot");
+  const shelfB = document.querySelectorAll(".shelfA")[1]; // Shelf B
+
+  // Animate path dots one by one
+  dots.forEach((dot, index) => {
+    setTimeout(() => {
+      dot.classList.add("show");
+    }, index * 600);
+  });
+
+  // Highlight shelf B after path
+  setTimeout(() => {
+    shelfB.style.background = "#2ecc71";
+    shelfB.style.color = "white";
+    shelfB.style.fontWeight = "bold";
+    shelfB.innerText = "📘 Shelf B (Data Structures)";
+  }, dots.length * 600 + 400);
+};
+</script>
+<script>
+function goBack() {
+    const source = localStorage.getItem("librarySource");
+
+    if (source === "student") {
+        window.location.href = "studentDashboard.html";
+    } 
+    else if (source === "teacher") {
+        window.location.href = "teachersprofile.html";
+    } 
+    else {
+        // fallback safety
+        window.location.href = "libraryIndex.html";
+    }
+}
+</script>
+<script>
+function goBack() {
+    const returnPage = localStorage.getItem("returnPage");
+
+    if (returnPage) {
+        window.location.href = returnPage;
+    } else {
+        window.history.back(); // fallback
+    }
+}
+</script>
+
+</body>
+</html>

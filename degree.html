@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Degree Section</title>
+<style>
+    body{
+        background-color: rgb(148, 63, 63);
+    }
+    .room{
+        height: 100vh;
+        width: 1000px;
+        background-color: rgb(148, 63, 63);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 200px;
+        border: 5px solid white;
+    }
+    .squareroom{
+        height: 50vh;
+        width: 500px;
+        align-self: flex-end;
+        background-color: black;
+        opacity: 0.8;
+    }
+    .door{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    background-color: black;
+    }
+    .door.top{
+    right: 450px;
+    width: 50px;
+    }
+    .counter{
+    height: 20vh;
+    width: 30px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: beige;
+    opacity: 0.8;
+    color: brown;
+    border-radius: 5px 5px 5px 5px;
+    text-align: center;
+    }
+    .rectangleroom{
+        height: 50vh;
+        width: 1000px;
+        background-color: black;
+        opacity: 0.8;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-evenly;
+        
+    }
+    .shelf{
+        height: 40vh;
+        width: 30px;
+        margin-right: 20px;
+        background-color: beige;
+        opacity: 0.8;
+        text-align: center;
+        color: brown;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+        border-radius: 5px 5px 5px 5px;
+    }
+</style>
+</head>
+<body>
+
+<a href="floor3.html">⬅</a>
+<h1>Degree Section</h1>
+
+<div class="room">
+<div class="squareroom">
+    <div class="door top"></div>
+    <div class="counter"><pre>C
+O
+U
+N
+T
+E
+R
+    </pre></div>
+</div>
+<div class="rectangleroom">
+        <div class="shelf" onclick="alert('Shelf A clicked')"> A </div> 
+        <div class="shelf" onclick="alert('Shelf B clicked')"> B </div>
+        <div class="shelf" onclick="alert('Shelf C clicked')"> C </div>
+        <div class="shelf" onclick="alert('Shelf D clicked')"> D </div>
+        <div class="shelf" onclick="alert('Shelf E clicked')"> E </div>
+        <div class="shelf" onclick="alert('Shelf F clicked')"> F </div>
+        <div class="shelf" onclick="alert('Shelf F clicked')"> G </div>
+        <div class="shelf" onclick="alert('Shelf G clicked')"> H </div>
+        <div class="shelf" onclick="alert('Shelf H clicked')"> I </div>
+</div>
+</div>
+</body>
+</html>

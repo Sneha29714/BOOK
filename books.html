@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Book Information</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("istockphoto-135341581-1024x1024.jpg");
+    background-size: cover;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 60px;
+    height: 100vh;
+    background: #2c3e50;
+    color: white;
+    position: fixed;
+    transition: width 0.3s;
+    overflow: hidden;
+    
+  overflow-y: auto;
+
+
+}
+
+.sidebar.open { width: 240px; }
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.sidebar li:hover { background: #34495e; }
+
+.sidebar i { margin-right: 10px; }
+
+/* Main */
+.main {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.main.shift { margin-left: 240px; }
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-area {
+    display: flex;
+    gap: 10px;
+}
+
+.search-area input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-area button {
+    padding: 8px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+
+/* Main */
+.main {
+    margin-left: 60px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.main.shift { margin-left: 240px; }
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-area {
+    display: flex;
+    gap: 10px;
+}
+
+.search-area input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-area button {
+    padding: 8px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Book Layout */
+.book-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+/* Left */
+.book-cover {
+    height: 300px;
+    width: 220px;
+}
+
+.book-cover img {
+    height: 300px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-image: url("image_book.jpg");
+    background-size: cover;
+}
+
+/* Right */
+.book-details {
+    flex: 1;
+}
+
+.book-details h2 {
+    margin-top: 0;
+}
+
+.book-details p {
+    margin: 6px 0;
+}
+
+.label {
+    font-weight: bold;
+}
+
+/* Button */
+.library-btn {
+    margin-top: 20px;
+    padding: 10px 18px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Library Model */
+#library {
+    display: none;
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.floor {
+    margin-top: 15px;
+}
+
+.room {
+    border: 2px solid #3498db;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.row {
+    background: #bdc3c7;
+    padding: 8px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.highlight {
+    background: #2ecc71;
+    color: white;
+    font-weight: bold;
+}
+.sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar:not(.open) li span {
+  display: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <ul>
+    <li onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i> Menu
+    </li>
+
+    <!-- <li onclick="goToProfile()">
+      <i class="fas fa-user"></i> Profile
+    </li> -->
+
+    <li onclick="goToDashboard()">
+      <i class="fas fa-table"></i> Dashboard
+    </li>
+
+    <li>
+  <i class="fa-solid fa-book"></i> <span>Syllabus</span>
+</li>
+
+<li>
+  <select id="subjectSelect" onchange="showSyllabus()"
+    style="width:100%; padding:8px; border-radius:6px;">
+    <option value="" disabled selected>Select Subject</option>
+    <option value="ds">Data Structure</option>
+    <option value="physics">Physics</option>
+  </select>
+</li>
+
+<li id="syllabusSection" style="display:none;">
+  <strong id="syllabusTitle"></strong>
+  <ul id="syllabusContent" style="margin-top:10px;"></ul>
+</li>
+
+
+    <li onclick="openLibrary()">
+      <i class="fas fa-library"></i> Library
+    </li>
+
+    <li onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </li>
+  </ul>
+</div>
+
+
+
+<!-- Main -->
+<div class="main" id="main">
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="search-area">
+        <input placeholder="Search Book">
+        <input placeholder="Search Author">
+        <button>Search</button>
+    </div>
+</div>
+
+<!-- BOOK INFO -->
+<div class="book-container">
+
+    <!-- Left -->
+    <div class="book-cover">
+        <img id="cover" src="C:\Users\JAYANTA\OneDrive\Desktop\web dev\search panel\library\image_book.jpg" >
+    </div>
+
+    <!-- Right -->
+    <div class="book-details">
+       <h2 id="title"></h2>
+<p><span class="label">Author:</span> <span id="author"></span></p>
+<p><span class="label">Edition:</span> <span id="edition"></span></p>
+<p><span class="label">Publication Year:</span> <span id="year"></span></p>
+<p><span class="label">Department:</span> <span id="department"></span></p>
+<p><span class="label">Status:</span> <span id="status"></span></p>
+
+<p><span class="label">Description:</span><br>
+<span id="description"></span>
+</p>
+
+
+        <button class="library-btn" onclick="openLibrary()">
+            📍 Take a look at the Library
+        </button>
+    </div>
+</div>
+
+<script>
+const sidebar = document.getElementById("sidebar");
+const main = document.getElementById("main");
+
+function toggleSidebar() {
+    sidebar.classList.toggle("open");
+    main.classList.toggle("shift");
+}
+
+/* LOAD BOOK DATA */
+const book = JSON.parse(localStorage.getItem("selectedBook"));
+
+if (!book) {
+    alert("No book selected");
+} else {
+    document.getElementById("title").innerText = book.title;
+    document.getElementById("author").innerText = book.author;
+    document.getElementById("edition").innerText = book.edition;
+    document.getElementById("year").innerText = book.year;
+    document.getElementById("department").innerText = book.department;
+    document.getElementById("status").innerText = book.status;
+    document.getElementById("description").innerText = book.description;
+    document.getElementById("cover").src = book.cover;
+
+    document.querySelector(".highlight").innerHTML = `
+        Shelf ${book.location.shelf} – Row ${book.location.row}<br>
+        📘 ${book.title}
+    `;
+
+    document.getElementById("locationPath").innerHTML = `
+        ${book.location.floor} → ${book.location.room} →
+        Shelf ${book.location.shelf} → Row ${book.location.row}
+    `;
+}
+function goToDashboard() {
+    const role = localStorage.getItem("userRole");
+
+    if (role === "student") {
+        window.location.href = "studentDashboard.html";
+    } 
+    else if (role === "teacher") {
+        window.location.href = "teachersprofile.html";
+    } 
+    else {
+        alert("User role not found. Please login again.");
+        window.location.href = "login.html";
+    }
+}
+
+function openLibrary() {
+    const book = JSON.parse(localStorage.getItem("selectedBook"));
+    if (!book) {
+        alert("Book data not found!");
+        return;
+    }
+
+    // Save book location
+    localStorage.setItem("bookLocation", JSON.stringify(book.location));
+
+    // VERY IMPORTANT: remember return page
+    localStorage.setItem("returnPage", "books.html");
+
+    // Go to library index (or directly to floor)
+    window.location.href = "index.html";
+}
+
+function goToProfile() {
+    const role = localStorage.getItem("userRole");
+
+    if (role === "student") {
+        window.location.href = "studentProfile.html";
+    } else if (role === "teacher") {
+        window.location.href = "teachersprofile.html";
+    } else {
+        alert("Please login again");
+        window.location.href = "login.html";
+    }
+}
+
+function goToSyllabus() {
+    const role = localStorage.getItem("userRole");
+
+    if (role === "student") {
+        window.location.href = "studentSyllabus.html";
+    } else if (role === "teacher") {
+        window.location.href = "teacherSyllabus.html";
+    } else {
+        alert("Please login again");
+        window.location.href = "login.html";
+    }
+}
+
+function logout() {
+    localStorage.clear();   // clear session
+    alert("Logged out successfully");
+    window.location.href = "login.html";
+}
+
+
+
+function checkLibrary(bookName) {
+    alert("Checking library for: " + bookName);
+  }
+
+  const syllabusData = {
+    ds: [
+      "Introduction to Data Structures",
+      "Arrays and Linked Lists",
+      "Stacks and Queues",
+      "Trees and Graphs",
+      "Sorting and Searching",
+      "Hashing"
+    ],
+    physics: [
+      "Units and Measurements",
+      "Kinematics",
+      "Laws of Motion",
+      "Work, Energy and Power",
+      "Thermodynamics"
+    ]
+  };
+
+let lastSelected = "";
+
+function showSyllabus() {
+  const subject = document.getElementById("subjectSelect").value;
+  const section = document.getElementById("syllabusSection");
+  const title = document.getElementById("syllabusTitle");
+  const content = document.getElementById("syllabusContent");
+
+  if (!subject) return;
+
+  // Clear previous syllabus
+  content.innerHTML = "";
+
+  // Show section
+  section.style.display = "block";
+
+  // Set title
+  title.innerText =
+    subject === "ds"
+      ? "Introduction to Data Structures,Arrays and Linked Lists,Stacks and Queues,Trees and Graphs,Sorting and Searching,Hashing"
+      : "Units and Measurements,Kinematics,Laws of Motion,Work, Energy and Power,Thermodynamics";
+
+  // Load syllabus
+  syllabusData[subject].forEach(topic => {
+    const li = document.createElement("li");
+    li.textContent = topic;
+    content.appendChild(li);
+  });
+}
+
+
+
+
+</script>
+
+
+</body>
+</html>

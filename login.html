@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Login</title>
+
+</head>
+<style>
+    * {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+/* Card container */
+body > * {
+  animation: fadeIn 0.8s ease;
+}
+
+h2 {
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+/* Login card */
+form {
+  background: #ffffff;
+  padding: 30px 25px;
+  width: 320px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Login button */
+button[type="submit"] {
+  margin-top: 15px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* Role toggle */
+.toggle {
+  background: #e2e8f0;
+  padding: 6px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.toggle button {
+  width: 48%;
+  padding: 10px;
+  border-radius: 25px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: #1e293b;
+  transition: 0.3s;
+}
+
+.toggle .active {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+}
+
+/* Smooth entry animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+<body>
+
+  <h2>Welcome to the library portal</h2>
+
+  <!-- Toggle buttons -->
+  <div class="toggle">
+    <button id="studentBtn" class="active" onclick="selectRole('student')">Student</button>
+    <button id="teacherBtn" onclick="selectRole('teacher')">Teacher</button>
+  </div>
+
+  <!-- Login Form -->
+  <form onsubmit="login(event)">
+    <input type="text" placeholder="Name" required>
+
+    <!-- Student fields -->
+    <input type="text" id="rollNo" placeholder="Roll No">
+    <input type="text" id="regNo" placeholder="Reg No">
+
+    <!-- Teacher field -->
+    <input type="text" id="teacherId" placeholder="Teacher ID" style="display:none">
+
+    <input type="password" placeholder="Password" required>
+
+    <button type="submit" style="border-radius: 25px;margin-left: 10px; width: 70%;">Login</button>
+  </form>
+
+  <script>
+    let role = "student"; // default
+
+function selectRole(selectedRole) {
+  role = selectedRole;
+
+  document.getElementById("studentBtn").classList.remove("active");
+  document.getElementById("teacherBtn").classList.remove("active");
+
+  if (role === "student") {
+    document.getElementById("studentBtn").classList.add("active");
+    document.getElementById("rollNo").style.display = "block";
+    document.getElementById("regNo").style.display = "block";
+    document.getElementById("teacherId").style.display = "none";
+  } else {
+    document.getElementById("teacherBtn").classList.add("active");
+    document.getElementById("rollNo").style.display = "none";
+    document.getElementById("regNo").style.display = "none";
+    document.getElementById("teacherId").style.display = "block";
+  }
+}
+function login(event) {
+  event.preventDefault();
+
+  // store role in localStorage
+  localStorage.setItem("userRole", role);
+
+  if (role === "student") {
+    window.location.href = "studentDashboard.html";
+  } else {
+    window.location.href = "teachersprofile.html";
+  }
+}
+
+</script>
+</body>
+</html>

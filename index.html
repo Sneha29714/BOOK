@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library 2D Model</title>
+
+<style>
+.library{
+    height: 100vh;
+    width: 100vw;
+    background-color: beige;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.back-btn{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+button{
+    height: 200px;
+    width: 300px;
+    border: 2px solid black;
+    border-radius: 20%;
+    margin-right: 20px;
+    font-size: large;
+    color: firebrick;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<a href="#" class="back-btn" onclick="goBack()">⬅</a>
+
+<div class="library">
+    <button onclick="location.href='floor1.html'">1st FLOOR</button>
+    <button onclick="location.href='floor2.html'">2nd FLOOR</button>
+    <button onclick="location.href='floor3.html'">3rd FLOOR</button>
+</div>
+
+<script>
+window.onload = function() {
+    const bookLocation = JSON.parse(localStorage.getItem("bookLocation"));
+
+    if (bookLocation) {
+        if (bookLocation.floor === "2nd Floor") {
+            // Redirect to 2nd floor
+            window.location.href = "floor2.html";
+        } 
+        else if (bookLocation.floor === "1st Floor") {
+            window.location.href = "floor1.html";
+        }
+        else if (bookLocation.floor === "3rd Floor") {
+            window.location.href = "floor3.html";
+        }
+    }
+};
+
+function goBack() {
+    const source = localStorage.getItem("librarySource");
+
+    if (source === "student") {
+        window.location.href = "studentDashboard.html";
+    } 
+    else if (source === "teacher") {
+        window.location.href = "teachersprofile.html";
+    } 
+    else {
+        window.history.back();
+    }
+}
+</script>
+
+</body>
+</html>
